@@ -7,21 +7,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CrewComponent implements OnInit {
 
+  memberBeingEdited: object = null;
+
   crew: object[] = [
     {name: "Eileen Collins", firstMission: false},
     {name: "Mae Jemison", firstMission: false},
     {name: "Ellen Ochoa", firstMission: true}
   ];
 
-  memberBeingEdited: object = null;
-
+  
   constructor() { }
 
   ngOnInit() {
   }
 
   add(memberName: string, isFirst: boolean) {
-    this.crew.push({name: memberName, firstMission: isFirst});
+    // for (let member of this.crew) {
+    //   if (member['name'] === memberName) {   //BONUS: validation for not allowing duplicates
+    //     return;
+    //   }
+    if (!this.memberExists(memberName)) {
+      this.crew.push({name: memberName, firstMission: isFirst});
+    }
   }
 
   remove(member: object) {
@@ -34,8 +41,20 @@ export class CrewComponent implements OnInit {
   }
 
   save(name: string, member: object) {
-    member['name'] = name;
+    if (!this.memberExists(name)) {
+      member['name'] = name;
+    }
     this.memberBeingEdited = null;
+  }
+
+//helper function: BONUS: don't allow duplicate names to be added to the crew
+  memberExists(name: string): boolean {
+    for (let i = 0; i < this.crew.length; i++) {  //array loop --> to check, if the person already exists in the Crew List
+      if (this.crew[i]['name'] === name) {
+        return true;
+      }
+    }
+    return false;
   }
 
 }
